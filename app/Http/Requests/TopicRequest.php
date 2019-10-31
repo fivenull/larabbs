@@ -7,7 +7,7 @@ class TopicRequest extends Request
     public function rules()
     {
         return [
-            'content' => 'required|min:2',
+            'body' => 'required|min:2',
         ];
     }
 
