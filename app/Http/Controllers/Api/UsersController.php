@@ -63,4 +63,10 @@ class UsersController extends Controller
 
         return (new UserResource($user))->showSensitiveFields();
     }
+
+    public function activeIndex(User $user)
+    {
+        UserResource::warp("data");
+        return UserResource::collection($user->getActiveUsers());
+    }
 }
