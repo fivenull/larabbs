@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Requests\Api\SocialAuthorizationRequest;
 use App\Http\Requests\Api\AuthorizationRequest;
-
+use App\Traits\PassportToken;
 use Psr\Http\Message\ServerRequestInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use Zend\Diactoros\Response as Psr7Response;
@@ -17,6 +17,8 @@ use League\OAuth2\Server\Exception\OAuthServerException;
 
 class AuthorizationsController extends Controller
 {
+    use PassportToken;
+
     public function socialStore($type, SocialAuthorizationRequest $request)
     {
         $driver = \Socialite::driver($type);
@@ -61,9 +63,12 @@ class AuthorizationsController extends Controller
                 break;
         }
 
-        $token= auth('api')->login($user);
+//        $token= auth('api')->login($user);
 
-        return $this->respondWithToken($token)->setStatusCode(201);
+        $result = $this->getBearerTokenByUser($user, '1', false);
+
+        return response()->json($result)->setStatusCode(201);
+//        return $this->respondWithToken($token)->setStatusCode(201);
     }
 
     public function store(AuthorizationRequest $request, AuthorizationServer $server, ServerRequestInterface $serverRequest)
